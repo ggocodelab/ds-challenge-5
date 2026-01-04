@@ -17,16 +17,16 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Instant momento;
+	private Instant moment;
 	
 	private OrderStatus status;
 	
 	public Order() {
 	}
 
-	public Order(Long id, Instant momento, OrderStatus status) {
+	public Order(Long id, Instant moment, OrderStatus status) {
 		this.id = id;
-		this.momento = momento;
+		this.moment = moment;
 		this.status = status;
 	}
 
@@ -38,12 +38,12 @@ public class Order {
 		this.id = id;
 	}
 
-	public Instant getMomento() {
-		return momento;
+	public Instant getMoment() {
+		return moment;
 	}
 
-	public void setMomento(Instant momento) {
-		this.momento = momento;
+	public void setMoment(Instant moment) {
+		this.moment = moment;
 	}
 
 	public OrderStatus getStatus() {

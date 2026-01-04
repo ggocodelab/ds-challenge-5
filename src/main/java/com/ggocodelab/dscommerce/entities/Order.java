@@ -3,6 +3,7 @@ package com.ggocodelab.dscommerce.entities;
 import java.time.Instant;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,14 +31,18 @@ public class Order {
 	@JoinColumn(name="client_id")
 	private User client;
 	
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
+	
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, OrderStatus status, User client) {
+	public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment) {
 		this.id = id;
 		this.moment = moment;
 		this.status = status;
 		this.client = client;
+		this.payment = payment;
 	}
 
 	public Long getId() {

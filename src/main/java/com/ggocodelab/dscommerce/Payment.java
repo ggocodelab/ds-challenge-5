@@ -20,7 +20,7 @@ public class Payment {
 	private Instant moment;
 	
 	public Payment() {
-	}
+	}	
 
 	public Payment(Long id, Instant moment) {
 		this.id = id;

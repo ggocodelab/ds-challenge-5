@@ -1,14 +1,17 @@
 package com.ggocodelab.dscommerce.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ggocodelab.dscommerce.dtos.ProductDTO;
 import com.ggocodelab.dscommerce.dtos.ProductMinDTO;
 import com.ggocodelab.dscommerce.entities.Product;
+import com.ggocodelab.dscommerce.exceptions.DatabaseException;
 import com.ggocodelab.dscommerce.exceptions.ResourceNotFoundException;
 import com.ggocodelab.dscommerce.repositories.ProductRepository;
 
@@ -47,6 +50,18 @@ public class ProductService {
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
 	}
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public void delete(Long id) {
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Recurso não encontrado");
+		}
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Falha de integridade referencial.");
+		}
+	}	
 
 	private void copyToEntity(ProductDTO dto, Product entity) {
 		entity.setName(dto.getName());
@@ -54,8 +69,4 @@ public class ProductService {
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());		
 	}
-
-	
-	
-
 }

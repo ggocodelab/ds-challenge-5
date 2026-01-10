@@ -18,11 +18,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
-public class CustomPasswordAuthenticationConverter {
+public class CustomPasswordAuthenticationConverter implements AuthenticationConverter{
+	
+	//Definição das constantes manualmente
+			public static final String USERNAME = "username";
+		    public static final String PASSWORD = "password";
 	
 	@Nullable
 	@Override
-	public Authentication convert(HttpServletRequest request) {
+	public Authentication convert(HttpServletRequest request) {		
 		
 		String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
 				
@@ -40,16 +44,16 @@ public class CustomPasswordAuthenticationConverter {
 		}
 		
 		// username (REQUIRED)
-		String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
+		String username = parameters.getFirst(USERNAME);
 		if (!StringUtils.hasText(username) ||
-				parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
+				parameters.get(USERNAME).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 		
 		// password (REQUIRED)
-		String password = parameters.getFirst(OAuth2ParameterNames.PASSWORD);
+		String password = parameters.getFirst(PASSWORD);
 		if (!StringUtils.hasText(password) ||
-				parameters.get(OAuth2ParameterNames.PASSWORD).size() != 1) {
+				parameters.get(PASSWORD).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 				

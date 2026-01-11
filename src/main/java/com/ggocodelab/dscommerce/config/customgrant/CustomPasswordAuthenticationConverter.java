@@ -13,16 +13,19 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.AuthenticationConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+@Component
 public class CustomPasswordAuthenticationConverter implements AuthenticationConverter{
 	
 	//Definição das constantes manualmente
-			public static final String USERNAME = "username";
-		    public static final String PASSWORD = "password";
+	public static final String USERNAME = "username";
+	public static final String PASSWORD = "password";
 	
 	@Nullable
 	@Override

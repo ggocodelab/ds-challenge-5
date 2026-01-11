@@ -6,13 +6,13 @@ public class CustomErrorDTO {
 	
 	private Instant timestamp;	
 	private Integer status;
-	private String errror;
+	private String error;
 	private String path;
 	
 	public CustomErrorDTO(Instant timestamp, Integer status, String errror, String path) {
 		this.timestamp = timestamp;
 		this.status = status;
-		this.errror = errror;
+		this.error = errror;
 		this.path = path;
 	}
 
@@ -24,8 +24,8 @@ public class CustomErrorDTO {
 		return status;
 	}
 
-	public String getErrror() {
-		return errror;
+	public String getError() {
+		return error;
 	}
 
 	public String getPath() {

@@ -47,6 +47,7 @@ public class AuthorizationServerConfig {
 		return http.build();
 	}
 	
+	// Faz a encriptacao da senha
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -55,12 +56,10 @@ public class AuthorizationServerConfig {
 	// 5. Define duracao e formato do token
 	@Bean
 	TokenSettings tokenSettings() {
-		// @formatter:off
 		return TokenSettings.builder()
 			.accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
 			.accessTokenTimeToLive(Duration.ofSeconds(jwtDurationSeconds))
 			.build();
-		// @formatter:on
 	}
 	
 	//4.Permite validacao dos tokens emitidos

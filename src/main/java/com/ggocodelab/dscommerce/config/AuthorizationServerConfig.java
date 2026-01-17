@@ -80,9 +80,8 @@ public class AuthorizationServerConfig {
 		// Customização do endpoint /oauth2/token
 	    authorizationServerConfigurer
 	        .tokenEndpoint(tokenEndpoint -> tokenEndpoint
-	        	.accessTokenRequestConverter(
-	                new CustomPasswordAuthenticationConverter()
-	             ).authenticationProvider(new CustomPasswordAuthenticationProvider(
+	        	.accessTokenRequestConverter(new CustomPasswordAuthenticationConverter())
+	        	.authenticationProvider(new CustomPasswordAuthenticationProvider(
 	            		 authorizationService(),
 	                     tokenGenerator(),
 	                     userDetailsService,

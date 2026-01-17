@@ -1,4 +1,4 @@
-package com.ggocodelab.dscommerce.config;
+package com.ggocodelab.dscommerce.config.customgrant;
 
 import java.util.Collection;
 

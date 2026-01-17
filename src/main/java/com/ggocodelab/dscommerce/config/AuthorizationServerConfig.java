@@ -16,6 +16,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -42,6 +44,9 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ggocodelab.dscommerce.config.customgrant.CustomPasswordAuthenticationConverter;
+import com.ggocodelab.dscommerce.config.customgrant.CustomPasswordAuthenticationProvider;
+import com.ggocodelab.dscommerce.config.customgrant.CustomUserAuthorities;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -62,16 +67,34 @@ public class AuthorizationServerConfig {
 	
 	@Bean
 	@Order(2)
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf(csrf -> csrf.disable())
-			.headers(headers -> headers.frameOptions(frame -> frame.disable()))
-			.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-			.formLogin(Customizer.withDefaults())
-			.httpBasic(Customizer.withDefaults());
+	SecurityFilterChain asSecurityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
 		
-		return http.build();
-	}
+		// Cria explicitamente o configurer do Authorization Server
+		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+	            new OAuth2AuthorizationServerConfigurer();
+		
+		http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
+		
+		http.with(authorizationServerConfigurer, Customizer.withDefaults());
+		
+		// Customização do endpoint /oauth2/token
+	    authorizationServerConfigurer
+	        .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+	        	.accessTokenRequestConverter(
+	                new CustomPasswordAuthenticationConverter()
+	             ).authenticationProvider(new CustomPasswordAuthenticationProvider(
+	            		 authorizationService(),
+	                     tokenGenerator(),
+	                     userDetailsService,
+	                     passwordEncoder())	             
+	            		 )
+	         );
+	    
+	    http.oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
+
+	    return http.build();
+		
+	  }
 	
 	//9 Persiste as autorizacoes emitidas
 	@Bean
@@ -139,7 +162,7 @@ public class AuthorizationServerConfig {
 		OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
 		return new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator);
 	}
-	// 12 
+	// 12 Add roles dos usuarios ao JWT
 	@Bean
 	OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
 		return context -> {
@@ -147,11 +170,11 @@ public class AuthorizationServerConfig {
 			CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
 			List<String> authorities = user.getAuthorities().stream().map(x -> x.getAuthority()).toList();
 			if (context.getTokenType().getValue().equals("access_token")) {
-				// @formatter:off
+	
 				context.getClaims()
 					.claim("authorities", authorities)
 					.claim("username", user.getUsername());
-				// @formatter:on
+
 			}
 		};
 	}

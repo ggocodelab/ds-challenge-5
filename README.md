@@ -17,13 +17,13 @@ Repositório criado para a entrega do desafio de conclusão do módulo 5 do curs
 
 
 # Critérios de correção
-[✔] Endpoints públicos GET /produts e GET /products/{id} funcionam sem necessidade de login.
-[✔] Endpoint de login funcionando e retornando o token de acesso.
-[✔] Endpoints privados de produto (POST/PUT/DELETE) funcionam somente para usuário ADMIN.
-[✔] Endpoint GET /users/me retorna usuário logado.
-[✔] Endpoints GET /orders/{id} e POST /orders funcionando 
-[✔] Usuário que não é ADMIN não consegue acessar pedido que não é dele em GET /orders/{id}
-[✔] Endpoint GET /categories retorna todas categorias
+[✔] Endpoints públicos GET /produts e GET /products/{id} funcionam sem necessidade de login.  
+[✔] Endpoint de login funcionando e retornando o token de acesso.  
+[✔] Endpoints privados de produto (POST/PUT/DELETE) funcionam somente para usuário ADMIN.  
+[✔] Endpoint GET /users/me retorna usuário logado.  
+[✔] Endpoints GET /orders/{id} e POST /orders funcionando   
+[✔] Usuário que não é ADMIN não consegue acessar pedido que não é dele em GET /orders/{id}  
+[✔] Endpoint GET /categories retorna todas categorias  
 
 
 # Recursos Auxiliares
